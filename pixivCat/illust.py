@@ -10,10 +10,11 @@ from aiohttp.client_exceptions import ClientConnectorError, ServerDisconnectedEr
 
 
 class Illustration(BaseModel):
+    id: int
+    title: str
     caption: str
     create_date: str
     height: int
-    id: int
     image_urls: Dict
     is_bookmarked: bool
     is_muted: bool
@@ -24,7 +25,6 @@ class Illustration(BaseModel):
     sanity_level: int
     series: Dict
     tags: List
-    title: str
     tools: List
     total_bookmarks: int
     total_comments: int
@@ -57,10 +57,11 @@ class Illustration(BaseModel):
                 ClientPayloadError
             ) as e:
                 continue
-            except Exception:
+            except Exception as e:
                 print(f"download {_fn} error:{str(e)}")
                 raise
-            break
+            else:
+                break
         print(f"{_fn} download completed")
 
     async def download_origin(self, path: str = None, filename: str = None) -> None:
@@ -72,11 +73,16 @@ class Illustration(BaseModel):
             path += "/"
         origin_urls: List[str] = [self.meta_single_page.get("original_image_url"), ] if self.meta_single_page else [
             url.get("image_urls").get("original") for url in self.meta_pages]
-        async with Session(proxy=PROXY.get()) as session:
-            for url in origin_urls:
-                await self._download(url, filename, path, session)
-                if filename:
-                    break
+        while 1:
+            try:
+                async with Session(proxy=PROXY.get()) as session:
+                    for url in origin_urls:
+                        await self._download(url, filename, path, session)
+                        if filename:
+                            break
+            except ClientOSError as e:
+                continue
+            return
     
     async def download_medium(self, medium: str = "medium", filename: str = None, path: str = None):
         """download illust medium

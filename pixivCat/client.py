@@ -6,7 +6,7 @@ from pixivCat import BaseClient
 from .user import User
 from .session import Session, session, main_loop, PROXY
 from typing import Any, Dict, NoReturn, Optional, Union
-
+import karas
 
 class URL:
     url: str
@@ -80,3 +80,19 @@ class Client(BaseClient):
         self._session.update_headers(
             Authorization=f"Bearer {self.access_token}")
         self.user = User(**response.get("user"))
+    
+    async def __aenter__(self):
+        if self.refresh_token:
+            await self.auth()
+        return self
+    
+    async def __aexit__(self,exc_type, exc_val, exc_tb):
+        """wait download complite"""
+        while 1:
+            tasks = asyncio.all_tasks()
+            if len(tasks)<=1: break
+            await asyncio.sleep(1)
+        if not self._session.closed:
+            await self._session.close()
+        if not self._loop.is_running():
+            self._loop.close()
