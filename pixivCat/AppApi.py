@@ -1,14 +1,14 @@
-from pixivCat.user import Artists
-from pixivCat.comments import Comments
-from pixivCat.client import Client
+from pixivcat.user import Artists
+from pixivcat.comments import Comments
+from pixivcat.client import Client
 from typing import Dict, List, Optional
 from asyncio import AbstractEventLoop
-from pixivCat.illust import Illustration, Illustrations
-from pixivCat.novel import Novel, NovelSeries, Novels
-from pixivCat.previews import Previews
-from pixivCat.user import Artist, Profile, ProfilePublicity, Workspace
-from pixivCat.bookmark import BookmarkDetail, Bookmarks
-from pixivCat.tag import Tag
+from pixivcat.illust import Illustration, Illustrations
+from pixivcat.novel import Novel, NovelSeries, Novels
+from pixivcat.previews import Previews
+from pixivcat.user import Artist, Profile, ProfilePublicity, Workspace
+from pixivcat.bookmark import BookmarkDetail, Bookmarks
+from pixivcat.tag import Tag
 
 
 class AppClient(Client):
@@ -236,7 +236,7 @@ class AppClient(Client):
     async def user_mypixiv(self, user_id: int, offset: int = 0) -> Previews:
         """Get my pixiv friend by user id"""
         response = await self.request("GET", f"/v1/user/mypixiv?user_id={user_id}&offset={offset}")
-        return Previews(self,response)
+        return Previews(self, response)
 
     async def user_blacklist(self, user_id: int, offset: int = 0) -> Artists:
         """get black list by user id"""
@@ -269,7 +269,7 @@ class AppClient(Client):
         response["series_next"] = Novel(**response.pop("series_next"))
         return response
 
-    async def illust_new(self, content_type: str="illust", max_illust_id=None) -> Illustrations:
+    async def illust_new(self, content_type: str = "illust", max_illust_id=None) -> Illustrations:
         """Get new illust"""
         response = await self.request("GET", f"/v1/illust/new?content_type={content_type}{f'&max_illust_id={max_illust_id}' if max_illust_id else ''}")
         return Illustrations(self, response)

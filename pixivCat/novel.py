@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
-from pixivCat import BaseModel, MultiMediaBaseModel
-from pixivCat.user import Artist
-from pixivCat.client import BaseClient
+from pixivcat import BaseModel, MultiMediaBaseModel
+from pixivcat.user import Artist
+from pixivcat.client import BaseClient
 
 
 class Novel(BaseModel):
@@ -12,12 +12,12 @@ class Novel(BaseModel):
     x_restrict: int
     is_original: bool
     image_urls: Dict
-    create_date:str
+    create_date: str
     tags: List
-    page_count: int 
+    page_count: int
     text_length: int
     user: Artist
-    series:Dict
+    series: Dict
     is_bookmarked: bool
     total_bookmarks: int
     total_view: int
@@ -29,9 +29,10 @@ class Novel(BaseModel):
 
 
 class Novels(MultiMediaBaseModel):
-    def __init__(self, client: BaseClient, resp:Dict) -> None:
+    def __init__(self, client: BaseClient, resp: Dict) -> None:
         self.novels = [Novel(**novel) for novel in resp.pop("novels")]
-        super().__init__(client=client,**resp)
+        super().__init__(client=client, **resp)
+
 
 class NovelSeriesDetail(BaseModel):
     id: int
@@ -44,12 +45,14 @@ class NovelSeriesDetail(BaseModel):
     user: Artist
     display_text: str
 
+
 class NovelSeries(MultiMediaBaseModel):
     def __init__(self, client: BaseClient, resp: Dict) -> None:
-        self.novel_series_detail = NovelSeriesDetail(**resp.pop("novel_series_detail"))
-        self.novel_series_first_novel = Novel(**resp.pop("novel_series_first_novel"))
-        self.novel_series_latest_novel = Novel(**resp.pop("novel_series_latest_novel"))
+        self.novel_series_detail = NovelSeriesDetail(
+            **resp.pop("novel_series_detail"))
+        self.novel_series_first_novel = Novel(
+            **resp.pop("novel_series_first_novel"))
+        self.novel_series_latest_novel = Novel(
+            **resp.pop("novel_series_latest_novel"))
         self.novels = [Novel(**novel) for novel in resp.pop("novels")]
         super().__init__(client, **resp)
-
-

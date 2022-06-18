@@ -2,11 +2,11 @@ from asyncio import AbstractEventLoop
 import asyncio
 import hashlib
 
-from pixivCat import BaseClient
+from pixivcat import BaseClient
 from .user import User
 from .session import Session, session, main_loop, PROXY
 from typing import Any, Dict, NoReturn, Optional, Union
-import karas
+
 
 class URL:
     url: str
@@ -49,7 +49,7 @@ class Client(BaseClient):
     def set_url(self, url: str) -> None:
         self._url = url
 
-    async def request(self, method:str, url: str, **kwds) -> Dict:
+    async def request(self, method: str, url: str, **kwds) -> Dict:
         url = self._url(url) if url.startswith("/") else url
         async with self._session.request(method=method, url=url, **kwds) as resp:
             return await self.raise_status_code(resp)
@@ -72,7 +72,7 @@ class Client(BaseClient):
         if not refresh_token and not self.refresh_token:
             raise ValueError("no refresh_token")
         data["refresh_token"] = refresh_token or self.refresh_token
-        response = await self.request("POST","https://oauth.secure.pixiv.net/auth/token", data=data, headers=headers)
+        response = await self.request("POST", "https://oauth.secure.pixiv.net/auth/token", data=data, headers=headers)
         if not response:
             # raise no response exception
             raise Exception(f"get auth response error")
@@ -80,17 +80,18 @@ class Client(BaseClient):
         self._session.update_headers(
             Authorization=f"Bearer {self.access_token}")
         self.user = User(**response.get("user"))
-    
+
     async def __aenter__(self):
         if self.refresh_token:
             await self.auth()
         return self
-    
-    async def __aexit__(self,exc_type, exc_val, exc_tb):
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         """wait download complite"""
         while 1:
             tasks = asyncio.all_tasks()
-            if len(tasks)<=1: break
+            if len(tasks) <= 1:
+                break
             await asyncio.sleep(1)
         if not self._session.closed:
             await self._session.close()

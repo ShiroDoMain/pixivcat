@@ -3,10 +3,10 @@ import os
 from typing import Dict, List
 
 from pyparsing import Optional
-from pixivCat import BaseModel, MultiMediaBaseModel, BaseClient
+from pixivcat import BaseModel, MultiMediaBaseModel, BaseClient
 from .user import Artist
 from .session import main_loop, Session, PROXY
-from aiohttp.client_exceptions import ClientConnectorError, ServerDisconnectedError, ClientPayloadError,ClientOSError
+from aiohttp.client_exceptions import ClientConnectorError, ServerDisconnectedError, ClientPayloadError, ClientOSError
 
 
 class Illustration(BaseModel):
@@ -83,7 +83,7 @@ class Illustration(BaseModel):
             except ClientOSError as e:
                 continue
             return
-    
+
     async def download_medium(self, medium: str = "medium", filename: str = None, path: str = None):
         """download illust medium
             Args:
@@ -95,7 +95,8 @@ class Illustration(BaseModel):
             os.mkdir(path)
         if path and not path.endswith("/"):
             path += "/"
-        medium_urls: List[str] = [urls.get("image_urls").get(medium) for urls in self.meta_pages] if self.meta_pages else [self.image_urls.get(medium),]
+        medium_urls: List[str] = [urls.get("image_urls").get(
+            medium) for urls in self.meta_pages] if self.meta_pages else [self.image_urls.get(medium), ]
         async with Session(proxy=PROXY.get()) as session:
             for url in medium_urls:
                 await self._download(url, filename, path, session)
@@ -120,7 +121,6 @@ class Illustrations(MultiMediaBaseModel):
         for illust in self.illusts:
             main_loop.create_task(illust.download_origin(path=path))
 
-    
     def download_mediums(self, path: str, medium: str = "medium"):
         """download illust medium
             Args:
@@ -134,4 +134,5 @@ class Illustrations(MultiMediaBaseModel):
         if not self.illusts:
             return
         for illust in self.illusts:
-            main_loop.create_task(illust.download_medium(path=path, medium=medium))
+            main_loop.create_task(
+                illust.download_medium(path=path, medium=medium))

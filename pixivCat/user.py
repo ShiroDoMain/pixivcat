@@ -1,4 +1,4 @@
-from pixivCat import BaseModel, MultiMediaBaseModel, BaseClient
+from pixivcat import BaseModel, MultiMediaBaseModel, BaseClient
 from typing import Dict, List
 
 
@@ -79,6 +79,6 @@ class Artist(BaseModel):
 
 
 class Artists(MultiMediaBaseModel):
-    def __init__(self, client: BaseClient, resp:Dict) -> None:
+    def __init__(self, client: BaseClient, resp: Dict) -> None:
         self.users = [Artist(**artist) for artist in resp.pop("users")]
         super().__init__(client, **resp)

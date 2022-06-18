@@ -9,18 +9,15 @@ PROXY = contextvars.ContextVar("proxy")
 
 
 class Session(ClientSession):
-    def __init__(self,proxy:str, *args, **kws) -> None:
+    def __init__(self, proxy: str, *args, **kws) -> None:
         self.proxy = proxy
         PROXY.set(proxy)
-        super().__init__(*args,**kws)
+        super().__init__(*args, **kws)
 
-    async def _request(self,*args, **kws) -> ClientResponse:
+    async def _request(self, *args, **kws) -> ClientResponse:
         kws["proxy"] = self.proxy
         return await super()._request(*args, **kws)
 
-    def update_headers(self, headers: Union[CIMultiDict,Dict, None] = None, **kws) -> None:
+    def update_headers(self, headers: Union[CIMultiDict, Dict, None] = None, **kws) -> None:
         """add some new headers"""
         self._default_headers.update(**headers or kws)
-
-    
-

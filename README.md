@@ -8,6 +8,10 @@ an async pixiv toolbox
 - raw pixiv api
   
 # Useage  
+- install pixivcat
+- ```bash
+  pip install pixivcat
+  ```
 - Login to pixiv using refresh token, if you don't have a pixiv refresh token, You can find the access method at [@upbit](https://gist.github.com/upbit/6edda27cb1644e94183291109b8a5fde)  
 - ```python
     from pixivcat.AppApi import AppClient

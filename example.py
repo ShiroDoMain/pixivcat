@@ -1,6 +1,6 @@
 import asyncio
 import os
-from pixivCat.AppApi import AppClient
+from pixivcat.AppApi import AppClient
 
 print("=="*100)
 REFRESH_TOKEN = "Your_fresh_token"
@@ -10,8 +10,9 @@ NOVEL_ID = 7970737
 NOVEL_USER_ID = 23202642
 NOVEL_SERIES = 1513531
 
+
 async def main():
-    app = AppClient(refresh_token=REFRESH_TOKEN,proxy=PROXY,loop=loop)
+    app = AppClient(refresh_token=REFRESH_TOKEN, proxy=PROXY, loop=loop)
     async with app:
         test_image = await app.illust_detail(99057205)
         await test_image.download_medium(path="images")
@@ -24,9 +25,9 @@ async def download_test():
         images = await app.illust_ranking()
         # while 1:
         images.download_origins("images")
-            # images = await images.next()
-            # if not images:
-            #     break
+        # images = await images.next()
+        # if not images:
+        #     break
 
 loop = asyncio.new_event_loop()
 loop.run_until_complete(main())

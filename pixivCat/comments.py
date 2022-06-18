@@ -1,5 +1,5 @@
 from typing import List
-from pixivCat import BaseModel
+from pixivcat import BaseModel
 from .client import BaseClient
 
 
@@ -9,7 +9,7 @@ class Comments(BaseModel):
     next_url: str
     comment_access_control: int
 
-    def __init__(self, client: BaseClient,**kws) -> None:
+    def __init__(self, client: BaseClient, **kws) -> None:
         self.client = client
         super().__init__(**kws)
 
