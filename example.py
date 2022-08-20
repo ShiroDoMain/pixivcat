@@ -3,7 +3,7 @@ import os
 from pixivcat.AppApi import AppClient
 
 print("=="*100)
-REFRESH_TOKEN = "xxx"
+REFRESH_TOKEN = "*************"
 PROXY = "socks5h://127.0.0.1:7890"
 ILLUST_ID = 99057163
 NOVEL_ID = 7970737
