@@ -1,2 +1,5 @@
 __pycache__
 images
+build
+dist
+*.egg-info
